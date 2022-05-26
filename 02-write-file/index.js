@@ -1,32 +1,38 @@
-const fs = require('fs');
 const path = require('path');
-const process = require('process');
+const { stdout, stdin } = process;
+const fs = require('fs');
+const readline = require('readline');
 
 
-fs.writeFile(
-    path.join(__dirname, 'text.txt'),
-    '',
-    (err) => {
-        if (err) throw err;
-        console.log("Hi! plese, enter your message:")
-    }
-);
+const filePath = path.join(__dirname, 'text.txt')
 
-const output = fs.createWriteStream('02-write-file/text.txt');
-const readline = require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout
-})
+console.log('Welcome to simple input programm');
 
-readline.on('line', (data) =>  {
-    if (data === 'exit') {
-        console.log("Program is closed. Bye!");
-        process.exit()
-        return }
-    output.write(`${data}\n`);
-    })
+function write(fp) {
+    const writableStream = fs.createWriteStream(fp, 'utf-8');
 
-process.on('beforeExit', () => {
-    console.log("Program is closed. Bye!");
-});
+    const rl = readline.createInterface({
+        input: stdin,
+        output: stdout,
+        prompt: 'Input something: '
+    });
 
+    rl.prompt();
+      
+    rl.on('line', (line) => {
+        if (line.trim() === 'exit') {
+            rl.close();
+        } else {
+            input = `${line}\n`
+            writableStream.write(input);
+            rl.prompt();
+        }
+    }).on('close', () => {
+        writableStream.end();
+        writableStream.on('finish', () => {
+            console.log(`Input written to ${fp}`);
+        })
+    });
+}
+
+write(filePath)

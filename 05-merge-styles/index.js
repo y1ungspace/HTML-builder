@@ -9,7 +9,7 @@ const output = fs.createWriteStream(path.join(__dirname, 'project-dist/bundle.cs
     if (err) throw err;
     else {
         files.forEach(file => {
-            if (path.extname(file) === '.txt') return
+            if (path.extname(file) !== '.css') return
             let currentFile = fs.createReadStream(path.join(input, file), 'utf-8')
             currentFile.on('data', chunk => output.write(chunk));
         })
