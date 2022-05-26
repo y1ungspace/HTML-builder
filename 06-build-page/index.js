@@ -27,8 +27,14 @@ fs.readFile(path.join(__dirname, 'template.html') , 'utf8', (err, templateData) 
                     if (err) throw err;
                     templateData = templateData.replace(`{{${file.split('.')[0]}}}`, data);
                     i++;
-                    if (i > 2)  {
-                        template.write(templateData)
+                    if (files.length > 3) {
+                        if (i > 3)  {
+                            template.write(templateData)
+                        }
+                    } else {
+                        if (i > 2)  {
+                            template.write(templateData)
+                        }
                     }
                 });
             })
